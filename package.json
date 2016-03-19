@@ -1,0 +1,22 @@
+{
+  "name": "pomodoro-cli",
+  "version": "1.0.0",
+  "description": "Simple pomodoro timer cli",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pomodoro",
+    "cli",
+    "timer"
+  ],
+  "author": "icarcal",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "moment": "^2.12.0",
+    "node-notifier": "^4.5.0",
+    "node-progress-bars": "0.0.7"
+  }
+}
