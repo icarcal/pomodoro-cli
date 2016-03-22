@@ -7,6 +7,7 @@ const pad = require('../helpers/pad');
 var Pomodoro = function() {
   this.timerFrom = '';
   this.timerTo = '';
+  this.message = '';
 }
 
 Pomodoro.prototype.setTimer = (time, duration) => {
@@ -14,20 +15,17 @@ Pomodoro.prototype.setTimer = (time, duration) => {
   this.timerTo = moment.duration(time, duration);
 }
 
-Pomodoro.prototype.getTimerTo = () => {
-  return this.timerTo;
-}
+Pomodoro.prototype.setMessage = message => this.message = message;
 
-Pomodoro.prototype.totalSeconds = () => {
-  return this.timerTo.asSeconds()+1
-}
+Pomodoro.prototype.getTimerTo = () => this.timerTo;
 
-Pomodoro.prototype.getTime = (type) => {
-  return pad(this[type].minutes(),0,2)+':'+pad(this[type].seconds(),0,2);
-}
+Pomodoro.prototype.getMessage = () => this.message;
 
-Pomodoro.prototype.tick = () => {
-  this.timerFrom.add(1, 's')
-}
+Pomodoro.prototype.getTime = type => pad(this[type].minutes(),0,2)+':'+pad(this[type].seconds(),0,2);
+
+Pomodoro.prototype.totalSeconds = () => this.timerTo.asSeconds()+1;
+
+Pomodoro.prototype.tick = () => this.timerFrom.add(1, 's');
+
 
 module.exports = new Pomodoro();
