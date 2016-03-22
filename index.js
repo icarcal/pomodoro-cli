@@ -31,7 +31,8 @@ const init = () => {
     width: 50,
     total: pomodoro.totalSeconds(),
     timerTo: pomodoro.getTime('timerTo'),
-    timerFrom: pomodoro.getTime('timerFrom')
+    timerFrom: pomodoro.getTime('timerFrom'),
+    callback: notify
   });
 
   setInterval(() => {
@@ -58,24 +59,25 @@ const getTimeToPomodoro = () => {
 
   return pomodoroConfig;
 }
+
 const tick = (bar) => {
   bar.tick(1, {
     timerFrom: pomodoro.getTime('timerFrom'),
     timerTo: pomodoro.getTime('timerTo')
   });
 
-  if( bar.completed ) {
-    notifier.notify({
-      title: 'Pomodoro Cli',
-      message: pomodoro.getMessage(),
-      icon: path.join(__dirname, 'images/pomodoro.png'),
-      sound: 'true',
-    });
-
-    process.exit(0);
-  }
-
   pomodoro.tick();
 };
+
+const notify = () => {
+  notifier.notify({
+    title: 'Pomodoro Cli',
+    message: pomodoro.getMessage(),
+    icon: path.join(__dirname, 'images/pomodoro.png'),
+    sound: 'true',
+  });
+
+  process.exit(0);
+}
 
 init();
