@@ -9,7 +9,7 @@ const program = require('commander');
 const pomodoro = require('./models/pomodoro');
 
 program
-  .version('0.0.3')
+  .version('0.0.4')
   .usage('Pomodoro cli - a simple pomodoro for terminal')
   .option('-s, --shortbreak', 'Add short break timer')
   .option('-l, --longbreak', 'Add long break timer')
