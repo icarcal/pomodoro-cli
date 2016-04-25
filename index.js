@@ -54,11 +54,11 @@ const getTimeToPomodoro = () => {
     pomodoroConfig.message = 'Time\'s up! What you\'re gonna do next?';
   } else {
     pomodoroConfig.time = 25;
-    pomodoroConfig.message = 'Go ahead, take a break, you earned it!'
+    pomodoroConfig.message = 'Go ahead, take a break, you earned it!';
   }
 
   return pomodoroConfig;
-}
+};
 
 const tick = (bar) => {
   bar.tick(1, {
@@ -78,6 +78,6 @@ const notify = () => {
   });
 
   process.exit(0);
-}
+};
 
 init();
