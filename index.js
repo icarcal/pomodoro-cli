@@ -8,8 +8,29 @@ const colors = require('colors');
 const program = require('commander');
 const pomodoro = require('./models/pomodoro');
 
+const APP = {
+  getPomodoroType: ({ shortbreak, longbreak, timer }) => {
+    let timerTypeKey = 'default';
+    const types = [
+      {shortbreak},
+      {longbreak},
+      {timer}
+    ];
+
+    types.filter((type) => {
+      const key = Object.keys(type)[0];
+
+      if (type[key]) {
+        timerTypeKey = key;
+      }
+    });
+
+    return timerTypeKey;
+  },
+}
+
 program
-  .version('0.0.4')
+  .version(process.env.npm_package_version)
   .usage('Pomodoro cli - a simple pomodoro for terminal')
   .option('-s, --shortbreak', 'Add short break timer')
   .option('-l, --longbreak', 'Add long break timer')
@@ -18,12 +39,9 @@ program
   .parse(process.argv);
 
 const init = () => {
-  let pomodoroConfig = {};
+  const pomodoroType = APP.getPomodoroType(program);
 
-  pomodoroConfig = getTimeToPomodoro();
-
-  pomodoro.setTimer(pomodoroConfig.time, 'minutes');
-  pomodoro.setMessage(pomodoroConfig.message);
+  pomodoro.setConfig(pomodoroType, program.timer);
 
   var bar = new progress(':timerFrom [:bar] :timerTo'.red, {
     complete: '=',
@@ -38,26 +56,6 @@ const init = () => {
   setInterval(() => {
     tick(bar);
   },1000);
-};
-
-const getTimeToPomodoro = () => {
-  let pomodoroConfig = {};
-
-  if(program.shortbreak) {
-    pomodoroConfig.time = 5;
-    pomodoroConfig.message = 'Let\'s get back to work!';
-  } else if(program.longbreak) {
-    pomodoroConfig.time = 10;
-    pomodoroConfig.message = 'Let\'s get back to work! What you\'ve been doing?';
-  } else if(program.timer) {
-    pomodoroConfig.time = program.timer;
-    pomodoroConfig.message = 'Time\'s up! What you\'re gonna do next?';
-  } else {
-    pomodoroConfig.time = 25;
-    pomodoroConfig.message = 'Go ahead, take a break, you earned it!';
-  }
-
-  return pomodoroConfig;
 };
 
 const tick = (bar) => {
