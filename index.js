@@ -52,7 +52,7 @@ const init = () => {
 
   const pomodoroType = APP.getPomodoroType(program);
 
-  pomodoro.setConfig(pomodoroType, program.timer, program.playSound);
+  pomodoro.setConfig(pomodoroType, program.timer);
 
   var bar = new progress(':timerFrom [:bar] :timerTo'[program.progressColor], {
     complete: '=',
