@@ -82,10 +82,10 @@ const notify = () => {
     title: 'Pomodoro Cli',
     message: pomodoro.getMessage(),
     icon: path.join(__dirname, 'images/pomodoro.png'),
-    sound: pomodoro.playSound ? 'false' : 'true',
+    sound: program.playSound ? 'false' : 'true',
   });
-  if (pomodoro.playSound) {
-    player.play(pomodoro.playSound, function(err) {
+  if (program.playSound) {
+    player.play(program.playSound, function(err) {
       if (err) {
         throw err;
       }

@@ -11,7 +11,7 @@ var Pomodoro = function() {
   this.message = '';
 }
 
-Pomodoro.prototype.setConfig = function (type, timer, playSound) {
+Pomodoro.prototype.setConfig = function (type, timer) {
   const pomodoroConfig = {
     shortbreak : { time: 5, message: 'Let\'s get back to work!' },
     longbreak : { time: 10, message: 'Let\'s get back to work! What you\'ve been doing?' },
@@ -24,7 +24,6 @@ Pomodoro.prototype.setConfig = function (type, timer, playSound) {
   this.type = type;
   this.message = config.message;
   this.setTimer(config.time, 'minutes');
-  this.playSound = playSound;
 }
 
 Pomodoro.prototype.setTimer = (time, duration) => {
