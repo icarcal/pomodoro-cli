@@ -40,6 +40,7 @@ program
   .option('-p, --play-sound <filepath>', 'Play a sound file when the timer expires')
   .option('--start-command <filepath>', 'Execute a shell command ansynchronously at the start of the timer. WARNING: The command is passed directly to a shell with the same user permissions this program runs under -- use with caution!')
   .option('--end-command <filepath>', 'Execute a shell command ansynchronously at the end of the timer. WARNING: The command is passed directly to a shell with the same user permissions this program runs under -- use with caution!')
+  .option('-c, --progress-color <color>', 'Color of the progress bar, as a valid colors.js text color', 'red')
   .option('-a, --add-task <task>', 'Add a new task', 'task')
   .parse(process.argv);
 
@@ -53,7 +54,7 @@ const init = () => {
 
   pomodoro.setConfig(pomodoroType, program.timer, program.playSound);
 
-  var bar = new progress(':timerFrom [:bar] :timerTo'.red, {
+  var bar = new progress(':timerFrom [:bar] :timerTo'[program.progressColor], {
     complete: '=',
     incomplete: ' ',
     width: 50,
