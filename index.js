@@ -7,7 +7,8 @@ const progress = require('progress');
 const colors = require('colors');
 const program = require('commander');
 const pomodoro = require('./models/pomodoro');
-var player = require('play-sound')();
+const player = require('play-sound')();
+const { spawn } = require('child_process');
 
 const APP = {
   getPomodoroType: ({ shortbreak, longbreak, timer }) => {
@@ -37,10 +38,17 @@ program
   .option('-l, --longbreak', 'Add long break timer')
   .option('-t, --timer <time>', 'Add specific time in minutes', parseInt)
   .option('-p, --play-sound <filepath>', 'Play a sound file when the timer expires')
+  .option('--start-command <filepath>', 'Execute a shell command ansynchronously at the start of the timer. WARNING: The command is passed directly to a shell with the same user permissions this program runs under -- use with caution!')
+  .option('--end-command <filepath>', 'Execute a shell command ansynchronously at the end of the timer. WARNING: The command is passed directly to a shell with the same user permissions this program runs under -- use with caution!')
   .option('-a, --add-task <task>', 'Add a new task', 'task')
   .parse(process.argv);
 
 const init = () => {
+
+  if (program.startCommand) {
+    runCommand(program.startCommand);
+  }
+
   const pomodoroType = APP.getPomodoroType(program);
 
   pomodoro.setConfig(pomodoroType, program.timer, program.playSound);
@@ -83,8 +91,22 @@ const notify = () => {
       }
     });
   }
+  if (program.endCommand) {
+    runCommand(program.endCommand);
+  }
   process.exit(0);
 
 };
+
+const runCommand = (command) => {
+  const child = spawn(command, {
+    stdio: 'ignore',
+    shell: true,
+    detached: true,
+  });
+  child.on('error', function (err) {
+    throw err;
+  });
+}
 
 init();
