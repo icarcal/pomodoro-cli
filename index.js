@@ -7,6 +7,8 @@ const progress = require('progress');
 const colors = require('colors');
 const program = require('commander');
 const pomodoro = require('./models/pomodoro');
+const player = require('play-sound')();
+const { spawn } = require('child_process');
 
 const APP = {
   getPomodoroType: ({ shortbreak, longbreak, timer }) => {
@@ -35,15 +37,24 @@ program
   .option('-s, --shortbreak', 'Add short break timer')
   .option('-l, --longbreak', 'Add long break timer')
   .option('-t, --timer <time>', 'Add specific time in minutes', parseInt)
+  .option('-p, --play-sound <filepath>', 'Play a sound file when the timer expires')
+  .option('--start-command <filepath>', 'Execute a shell command ansynchronously at the start of the timer. WARNING: The command is passed directly to a shell with the same user permissions this program runs under -- use with caution!')
+  .option('--end-command <filepath>', 'Execute a shell command ansynchronously at the end of the timer. WARNING: The command is passed directly to a shell with the same user permissions this program runs under -- use with caution!')
+  .option('-c, --progress-color <color>', 'Color of the progress bar, as a valid colors.js text color', 'red')
   .option('-a, --add-task <task>', 'Add a new task', 'task')
   .parse(process.argv);
 
 const init = () => {
+
+  if (program.startCommand) {
+    runCommand(program.startCommand);
+  }
+
   const pomodoroType = APP.getPomodoroType(program);
 
   pomodoro.setConfig(pomodoroType, program.timer);
 
-  var bar = new progress(':timerFrom [:bar] :timerTo'.red, {
+  var bar = new progress(':timerFrom [:bar] :timerTo'[program.progressColor], {
     complete: '=',
     incomplete: ' ',
     width: 50,
@@ -72,10 +83,31 @@ const notify = () => {
     title: 'Pomodoro Cli',
     message: pomodoro.getMessage(),
     icon: path.join(__dirname, 'images/pomodoro.png'),
-    sound: 'true',
+    sound: program.playSound ? 'false' : 'true',
   });
-
+  if (program.playSound) {
+    player.play(program.playSound, function(err) {
+      if (err) {
+        throw err;
+      }
+    });
+  }
+  if (program.endCommand) {
+    runCommand(program.endCommand);
+  }
   process.exit(0);
+
 };
+
+const runCommand = (command) => {
+  const child = spawn(command, {
+    stdio: 'ignore',
+    shell: true,
+    detached: true,
+  });
+  child.on('error', function (err) {
+    throw err;
+  });
+}
 
 init();
