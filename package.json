@@ -1,6 +1,6 @@
 {
   "name": "pomodoro-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Simple pomodoro timer cli",
   "main": "index.js",
   "scripts": {
