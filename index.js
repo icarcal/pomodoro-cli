@@ -57,7 +57,7 @@ const init = () => {
   var bar = new progress(':timerFrom [:bar] :timerTo'[program.progressColor], {
     complete: '=',
     incomplete: ' ',
-    width: 50,
+    width: process.stdout.columns,
     total: pomodoro.totalSeconds(),
     timerTo: pomodoro.getTime('timerTo'),
     timerFrom: pomodoro.getTime('timerFrom'),
