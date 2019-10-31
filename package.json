@@ -4,7 +4,8 @@
   "description": "Simple pomodoro timer cli",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "git-cz"
   },
   "preferGlobal": true,
   "keywords": [
@@ -18,9 +19,15 @@
   },
   "author": "icarcal",
   "license": "MIT",
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
   "dependencies": {
     "colors": "^1.1.2",
     "commander": "^2.9.0",
+    "cz-conventional-changelog": "^3.0.2",
     "moment": ">=2.19.3",
     "node-notifier": "^4.5.0",
     "play-sound": "^1.1.3",
