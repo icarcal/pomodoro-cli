@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+const process = require('process');
 const path = require('path');
 const notifier = require('node-notifier');
 const progress = require('progress');
@@ -40,6 +41,7 @@ program
   .option('--player-binary <name>', 'System binary to use for playing sounds, default auto selects')
   .option('--start-command <filepath>', 'Execute a shell command ansynchronously at the start of the timer. WARNING: The command is passed directly to a shell with the same user permissions this program runs under -- use with caution!')
   .option('--end-command <filepath>', 'Execute a shell command ansynchronously at the end of the timer. WARNING: The command is passed directly to a shell with the same user permissions this program runs under -- use with caution!')
+  .option('--interrupt-command <filepath>', 'Execute a shell command prior to exiting from a SIGINT signal. WARNING: The command is passed directly to a shell with the same user permissions this program runs under -- use with caution!')
   .option('-c, --progress-color <color>', 'Color of the progress bar, as a valid colors.js text color', 'red')
   .option('-a, --add-task <task>', 'Add a new task', 'task')
   .parse(process.argv);
@@ -69,6 +71,14 @@ const init = () => {
     timerFrom: pomodoro.getTime('timerFrom'),
     callback: notify
   });
+
+  if (program.interruptCommand) {
+    process.on('SIGINT', function() {
+      runCommand(program.interruptCommand);
+      // 130 is the exit code for SIGINT.
+      process.exit(130);
+    });
+  }
 
   setInterval(() => {
     tick(bar);
