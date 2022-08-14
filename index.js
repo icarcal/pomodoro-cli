@@ -74,9 +74,11 @@ const init = () => {
 
   if (program.interruptCommand) {
     process.on('SIGINT', function() {
-      runCommand(program.interruptCommand);
-      // 130 is the exit code for SIGINT.
-      process.exit(130);
+      const callback = function(_code) {
+        // 130 is the exit code for SIGINT.
+        process.exit(130);
+      }
+      runCommand(program.interruptCommand, callback);
     });
   }
 
@@ -115,12 +117,17 @@ const notify = () => {
 
 };
 
-const runCommand = (command) => {
+const runCommand = (command, callback) => {
   const child = spawn(command, {
     stdio: 'ignore',
     shell: true,
     detached: true,
   });
+  if (typeof callback === 'function') {
+    child.on('close', (code) => {
+      callback(code);
+    });
+  }
   child.on('error', function (err) {
     throw err;
   });
